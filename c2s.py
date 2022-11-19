@@ -5,11 +5,11 @@ def binder(cSocket, cAddr):
         while True:
             data = cSocket.recv(4096)
             msg = data.decode()
-            print(cAddr," : ", msg)
-
-            msg = input("input command>> ")
+            print(cAddr," : \n", msg)
             if msg == 'exit':
                 break
+            msg = input("input command>> ")
+            
             data = msg.encode()
             cSocket.send(data)
 
