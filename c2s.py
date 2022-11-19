@@ -1,9 +1,9 @@
 import socket, threading
 
-def binder(cScoket, cAddr):
+def binder(cSocket, cAddr):
     try:
         while True:
-            data = cScoket.recv(1024)
+            data = cSocket.recv(4096)
             msg = data.decode()
             print(cAddr," : ", msg)
 
@@ -17,7 +17,7 @@ def binder(cScoket, cAddr):
         print("클라이언트와 접속 종료", erm)
     finally:
         print(cAddr, '과의 접속이 정상 종료되었습니다.')
-        cScoket.close()
+        cSocket.close()
 
 if __name__ == '__main__' :
     # 소켓 생성
