@@ -1,5 +1,4 @@
 import socket, subprocess, threading, os
-
 def connect(h, p):
     cSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     cSocket.connect((h, p))
