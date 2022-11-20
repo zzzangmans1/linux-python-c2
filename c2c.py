@@ -60,7 +60,7 @@ def connect(h, p):
 
 if __name__ == '__main__':
 
-    h = '10.211.55.5'
+    h = '10.211.55.5' # 자신의 ip
     p = 4444
     try:
         th = threading.Thread(target=connect, args=(h, p))
