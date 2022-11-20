@@ -19,7 +19,7 @@ if __name__ == '__main__' :
     if not os.path.exists(filename):
         print("no file")
         sys.exit()
-
+    filename[0] = '2'
     print("파일 %s 전송 시작" %filename)
     with open(filename, 'rb') as f:
         try:
