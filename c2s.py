@@ -1,4 +1,4 @@
-import socket, threading, subprocess
+import socket, threading, subprocess, time
 
 
 def binder(cSocket, cAddr):
@@ -10,7 +10,8 @@ def binder(cSocket, cAddr):
             if msg == 'exit':
                 break
             if msg.find('clear') == 0:
-                subprocess.run('gnome-terminal --command "python3 cfile.py -f 123.png -i 10.211.55.5"', shell=True)
+                time.sleep(3)
+                subprocess.run('gnome-terminal --command "python3 cfile.py -f 123.png -i 10.211.55.4"', shell=True)
                 
             msg = input("input command>> ")
             
