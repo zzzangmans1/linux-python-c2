@@ -15,12 +15,12 @@ if __name__ == '__main__' :
     filename = connectionSock.recv(1024) #클라이언트한테 파일이름(이진 바이트 스트림 형태)을 전달 받는다
     print('받은 데이터 : ', filename.decode('utf-8')) #파일 이름을 일반 문자열로 변환한다
     data_transferred = 0
-
     if not os.path.exists(filename):
         print("no file")
         sys.exit()
-    filename[0] = '2'
+    
     print("파일 %s 전송 시작" %filename)
+
     with open(filename, 'rb') as f:
         try:
             data = f.read(1024) #1024바이트 읽는다
