@@ -1,4 +1,4 @@
-import socket, threading, subprocess, time
+import socket, threading, subprocess, time, os
 
 
 def binder(cSocket, cAddr):
